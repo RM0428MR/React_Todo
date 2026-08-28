@@ -9,7 +9,6 @@ import { Form } from '../../ui/Form'
 import { errorToast } from '../../../utils/errorToast'
 import styles from './index.module.css'
 
-// TopページでTodo一覧とフォームを表示するコンポーネント。
 export const Top = () => {
   const [todos, setTodos] = useState([])
   const [editTodoId, setEditTodoId] = useState('')
@@ -19,7 +18,6 @@ export const Top = () => {
     description: '',
   })
 
-  // フォーム入力の変更をstateに反映する。
   const handleInputChange = useCallback((event) => {
     const { name, value } = event.target
     setInputValues((prev) => ({ ...prev, [name]: value }))
@@ -116,7 +114,7 @@ export const Top = () => {
           isCompleted: todos.find((todo) => todo.id === id).isCompleted,
         })
         .then(({ data }) => {
-          console.log(data)
+          setTodos((prev) => prev.map((todo) => (todo.id === id ? data : todo)))
         })
         .catch((error) => {
           switch (error.statusCode) {
@@ -150,9 +148,20 @@ export const Top = () => {
 
   // 初回レンダー時にサーバーからTodo一覧を取得する。
   useEffect(() => {
-    axios.get('http://localhost:3000/todo').then(({ data }) => {
-      setTodos(data)
-    })
+    axios
+      .get('http://localhost:3000/todo')
+      .then(({ data }) => {
+        setTodos(data)
+      })
+      .catch((error) => {
+        switch (error.statusCode) {
+          case 404:
+            errorToast('ToDo一覧が見つかりませんでした')
+            break
+          default:
+            errorToast(error.message)
+        }
+      })
   }, [])
 
   return (
