@@ -40,14 +40,28 @@ export const Top = () => {
   const handleCreateTodoSubmit = useCallback(
     (event) => {
       event.preventDefault()
-      axios.post('http://localhost:3000/todo', inputValues).then(({ data }) => {
-        setTodos((prev) => [...prev, data])
-        setIsAddTaskFormOpen(false)
-        setInputValues({
-          title: '',
-          description: '',
+      axios
+        .post('http://localhost:3000/todo', inputValues)
+        .then(({ data }) => {
+          setTodos((prev) => [...prev, data])
+          setIsAddTaskFormOpen(false)
+          setInputValues({
+            title: '',
+            description: '',
+          })
         })
-      })
+        .catch((error) => {
+          switch (error.statusCode) {
+            case 404:
+              errorToast(
+                '新規作成先のToDoが見つかりませんでした。画面を更新して再度お試しください。'
+              )
+              break
+            default:
+              errorToast(error.message)
+              break
+          }
+        })
     },
     [inputValues]
   )
@@ -120,7 +134,7 @@ export const Top = () => {
           switch (error.statusCode) {
             case 404:
               errorToast(
-                '削除するToDoが見つかりませんでした。画面を更新して再度お試しください。'
+                '更新するToDoが見つかりませんでした。画面を更新して再度お試しください。'
               )
               break
             default:
@@ -156,7 +170,7 @@ export const Top = () => {
       .catch((error) => {
         switch (error.statusCode) {
           case 404:
-            errorToast('ToDo一覧が見つかりませんでした')
+            errorToast('ToDo一覧が見つかりませんでした。画面を更新して再度お試しください。')
             break
           default:
             errorToast(error.message)
