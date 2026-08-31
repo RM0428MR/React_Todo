@@ -1,12 +1,31 @@
-.sidebar {
-  width: 280px;
-  height: 100%;
-  padding: 16px;
-  background-color: var(--cream);
-}
-
 .navi-item {
-  display: inline-block;
+  /* ↓ プロパティを全て置き換え */
+  display: flex;
+  align-items: center;
   width: 100%;
   padding: 8px 10px;
+  color: var(--indigo-blue);
+}
+
+.category {
+  font-weight: bold;
+}
+
+.list {
+  margin-top: 8px;
+}
+
+.active {
+  color: var(--dark-blue);
+  text-decoration: none;
+  background-color: var(--pastel-orange);
+  border-radius: 4px;
+}
+
+.icon {
+  margin-top: 3px;
+}
+
+.text {
+  margin-left: 8px;
 }
