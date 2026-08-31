@@ -20,5 +20,8 @@
   "volta": {
     "node": "18.16.0",
     "npm": "9.5.1"
+  },
+  "dependencies": {
+    "recoil": "^0.7.7"
   }
 }
