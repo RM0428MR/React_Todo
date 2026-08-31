@@ -1,16 +1,18 @@
-import { useState, useEffect, useCallback } from 'react' // 追加
-import { axios } from '../../../utils/axiosConfig' // 追加
-
+import { useState, useEffect, useCallback } from 'react' 
+import { useRecoilValue, useSetRecoilState } from 'recoil'
+import { axios } from '../../../utils/axiosConfig' 
+import { todoState, incompleteTodoListState } from '../../../stores/todoState'
 import { Layout } from '../../ui/Layout'
 import { ListItem } from '../../ui/ListItem'
-import { Button } from '../../ui/Button' // 追加
-import { Icon } from '../../ui/Icon' // 追加
+import { Button } from '../../ui/Button' 
+import { Icon } from '../../ui/Icon' 
 import { Form } from '../../ui/Form'
 import { errorToast } from '../../../utils/errorToast'
 import styles from './index.module.css'
 
 export const Top = () => {
-  const [todos, setTodos] = useState([])
+  const todos = useRecoilValue(incompleteTodoListState)
+  const setTodos = useSetRecoilState(todoState)
   const [editTodoId, setEditTodoId] = useState('')
   const [isAddTaskFormOpen, setIsAddTaskFormOpen] = useState(false)
   const [inputValues, setInputValues] = useState({
@@ -63,7 +65,7 @@ export const Top = () => {
           }
         })
     },
-    [inputValues]
+    [setTodos, inputValues]
   )
 
   // 編集中のTodoをサーバーで更新し一覧に反映する。
@@ -97,7 +99,7 @@ export const Top = () => {
           }
         })
     },
-    [editTodoId, inputValues]
+    [setTodos, editTodoId, inputValues]
   )
 
   // 指定したTodoを削除して一覧から取り除く。
@@ -119,7 +121,7 @@ export const Top = () => {
             break
         }
       })
-  }, [])
+  }, [setTodos])
 
   const handleToggleButtonClick = useCallback(
     (id) => {
@@ -143,7 +145,7 @@ export const Top = () => {
           }
         })
     },
-    [todos]
+    [todos, setTodos]
   )
   // 選択したTodoを編集モードにして入力欄に値をセットする。
   const handleEditButtonClick = useCallback(
@@ -176,7 +178,7 @@ export const Top = () => {
             errorToast(error.message)
         }
       })
-  }, [])
+  }, [setTodos])
 
   return (
     <Layout>
