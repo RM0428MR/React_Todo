@@ -1,26 +1,59 @@
 import { memo } from 'react'
+import { NavLink } from 'react-router-dom'
 import styles from './index.module.css'
+
+import { Icon } from '../Icon' 
 
 const NaviList = [
   {
     id: 1,
-    lineName: 'ToDo一覧',
-    path: '/top',
+    lineName: 'すべて',
+    path: '/',
+    iconName: 'todoList',
+  },
+  {
+    id: 2,
+    lineName: '完了済み',
+    path: '/completed',
+    iconName: 'completeList',
   },
 ]
 
 export const Sidebar = memo(() => {
-  return (
+    return (
     <ul className={styles.sidebar}>
-      {NaviList.map((list) => {
-        return (
-          <li className={styles.list} key={list.id}>
-            <a href='/' className={styles['navi-item']}>
-              {list.lineName}
-            </a>
-          </li>
-        )
-      })}
+      <li className={['sidebar-list']}>
+        <p className={styles.category}>ToDo</p>
+        <ul className={styles.list}>
+          {NaviList.map((list) => {
+            return (
+              <li className={styles['list-item']} key={list.id}>
+                <NavLink
+                  to={list.path}
+                  end
+                  className={({ isActive }) => {
+                    return isActive
+                      ? `${styles['navi-item']} ${styles.active}`
+                      : [styles['navi-item']]
+                  }}
+                >
+                  {({ isActive }) => (
+                    <>
+                      <Icon
+                        iconName={list.iconName}
+                        color={isActive ? 'dark-blue' : 'indigo-blue'}
+                        size='medium'
+                        className={styles.icon}
+                      />
+                      <span className={styles.text}>{list.lineName}</span>
+                    </>
+                  )}
+                </NavLink>
+              </li>
+            )
+          })}
+        </ul>
+      </li>
     </ul>
   )
 })
